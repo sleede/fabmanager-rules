@@ -7,7 +7,7 @@ module.exports = {
           "description": "Enforce React components to have a CSS class named like the component on their top level tag."
         },
         "messages": {
-          "no-class-name": "Component class name should be named like the component on their top level tag."
+          "no-class-name": "Component className should have a class named like the component, with dashes, on its top level tag."
         }
       },
       "create": (context) => {
