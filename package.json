@@ -1,0 +1,25 @@
+{
+  "name": "fabmanager-rules",
+  "version": "0.0.1",
+  "description": "ESLint rules for Fab-manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sleede/fabmanager-rules.git"
+  },
+  "keywords": [
+    "fabmanager"
+  ],
+  "author": "Sleede",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sleede/fabmanager-rules/issues"
+  },
+  "homepage": "https://github.com/sleede/fabmanager-rules#readme",
+  "peerDependencies": {
+    "eslint": ">= 3"
+  }
+}
