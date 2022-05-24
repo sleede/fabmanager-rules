@@ -8,7 +8,8 @@ module.exports = {
         },
         "messages": {
           "no-class-name": "Component className should have a class named like the component, with dashes, on its top level tag."
-        }
+        },
+        "fixable": "code"
       },
       "create": (context) => {
         function findDeclaration (node) {
