@@ -34,7 +34,7 @@ module.exports = {
             // only target root elements
             if (node.parent.parent.type !== 'ReturnStatement') return;
 
-            const componentName = findDeclaration(node).id.name;
+            const componentName = findDeclaration(node).id.name.replace(/Component$/, '');
             const dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
 
             const classNameAttr = node.attributes.find((attr) => attr.name.name === "className");
