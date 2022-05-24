@@ -61,6 +61,7 @@ module.exports = {
                   dashedName
                 },
                 fix: (fixer) => {
+                  const classNameAttr = jsxNodes[jsxNodes.length-1].attributes.find((attr) => attr.name.name === 'className');
                   const sourceCode = context.getSourceCode();
                   let fixedCode = sourceCode.getText(classNameAttr.value);
                   if (classNameAttr.value.type === 'Literal') {
