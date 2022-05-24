@@ -61,16 +61,23 @@ module.exports = {
                   dashedName
                 },
                 fix: (fixer) => {
-                  const classNameAttr = jsxNodes[jsxNodes.length-1].attributes.find((attr) => attr.name.name === 'className');
+                  const fixNode = jsxNodes[jsxNodes.length-1];
+                  const classNameAttr = fixNode.attributes.find((attr) => attr.name.name === 'className');
                   const sourceCode = context.getSourceCode();
-                  let fixedCode = sourceCode.getText(classNameAttr.value);
-                  if (classNameAttr.value.type === 'Literal') {
-                    fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
+                  if (classNameAttr) {
+                    let fixedCode = sourceCode.getText(classNameAttr.value);
+                    if (classNameAttr.value.type === 'Literal') {
+                      fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
+                    }
+                    if (classNameAttr.value.type === 'JSXExpressionContainer') {
+                      fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
+                    }
+                    return fixer.replaceText(classNameAttr.value, fixedCode);
+                  } else {
+                    let fixedCode = sourceCode.getText(fixNode).replace('>', ` className="${dashedName}">`);
+                    console.log(fixedCode);
+                    return fixer.replaceText(fixNode, fixedCode);
                   }
-                  if (classNameAttr.value.type === 'JSXExpressionContainer') {
-                    fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
-                  }
-                  return fixer.replaceText(classNameAttr.value, fixedCode);
                 }
               });
             }
