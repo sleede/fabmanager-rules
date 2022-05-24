@@ -12,65 +12,61 @@ module.exports = {
         "fixable": "code"
       },
       "create": (context) => {
-        let found = false;
-
-        function findRoot (node) {
-          if (node.parent) return findRoot(node.parent);
-          else return node;
-        }
+        let dashedName = null;
+        let jsxNodes = [];
 
         function evaluateClassName(className) {
           if (className) {
-            if (className.value.type === "Literal") {
+            if (className.value.type === 'Literal') {
               return className.value.value;
             }
-            if (className.value.type === "JSXExpressionContainer") {
+            if (className.value.type === 'JSXExpressionContainer') {
               return className.value.expression.quasis.map(q => q.value.raw).join();
             }
-	  }
+	        }
           return '';
         }
 
-       return {
+        return {
+          ExportNamedDeclaration: (node) => {
+            let componentName = null;
+            if (node.declaration) {
+              componentName = node.declaration.declarations[0].id.name;
+            }
+            if (node.specifiers[0]) {
+              componentName = node.specifiers[0].exported.name;
+            }
+            dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
+          },
           JSXOpeningElement: (node) => {
-            // only target root elements
             if (node.parent.parent.type !== 'ReturnStatement') return;
-            // we do not want to trigger this verification multiple times if the matching class was found
-            if (found) return;
+            jsxNodes.push(node);
+          },
+          'Program:exit': (node) => {
+            let found = false;
+            for (const jsxNode of jsxNodes) {
+              const classNameAttr = jsxNode.attributes.find((attr) => attr.name.name === 'className');
+              const classes = evaluateClassName(classNameAttr);
+              const regex = new RegExp("(^|\\s)" + dashedName + "(\\s|$)");
 
-            const root = findRoot(node);
-            const namedExport = root.body.find(n => n.type === "ExportNamedDeclaration");
-            let componentName = '';
-            if (namedExport.declaration) {
-              componentName = namedExport.declaration.declarations[0].id.name;
+              if (classNameAttr && classes.match(regex)) {
+                found = true;
+              }
             }
-            if (namedExport.specifiers[0]) {
-              componentName = namedExport.specifiers[0].exported.name;
-            }
-            const dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
-
-            const classNameAttr = node.attributes.find((attr) => attr.name.name === "className");
-            const classes = evaluateClassName(classNameAttr);
-            const regex = new RegExp("(^|\\s)" + dashedName + "(\\s|$)");
-
-            if (classNameAttr && classes.match(regex)) {
-              found = true;
-            }
-
-            if (classNameAttr && !classes.match(regex)) {
+            if (!found) {
               context.report({
-                node,
-                messageId: "no-class-name",
+                node: jsxNodes[jsxNodes.length-1],
+                messageId: 'no-class-name',
                 data: {
-                  componentName
+                  dashedName
                 },
                 fix: (fixer) => {
                   const sourceCode = context.getSourceCode();
                   let fixedCode = sourceCode.getText(classNameAttr.value);
-                  if (classNameAttr.value.type === "Literal") {
-                     fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
+                  if (classNameAttr.value.type === 'Literal') {
+                    fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
                   }
-                  if (classNameAttr.value.type === "JSXExpressionContainer") {
+                  if (classNameAttr.value.type === 'JSXExpressionContainer') {
                     fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
                   }
                   return fixer.replaceText(classNameAttr.value, fixedCode);
