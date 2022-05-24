@@ -31,6 +31,9 @@ module.exports = {
 
        return {
           JSXOpeningElement: (node) => {
+            // only target root elements
+            if (node.parent.parent.type !== 'ReturnStatement') return;
+
             const componentName = findDeclaration(node).id.name;
             const dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
 
