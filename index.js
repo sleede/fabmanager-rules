@@ -35,7 +35,7 @@ module.exports = {
           JSXOpeningElement: (node) => {
             // only target root elements
             if (node.parent.parent.type !== 'ReturnStatement') return;
-            // we want to trigger this verification only once per file
+            // we do not want to trigger this verification multiple times if the matching class was found
             if (found) return;
 
             const componentName = findDeclaration(node).id.name;
@@ -45,8 +45,11 @@ module.exports = {
             const classes = evaluateClassName(classNameAttr);
             const regex = new RegExp("(^|\\s)" + dashedName + "(\\s|$)");
 
-            if (classNameAttr && !classes.match(regex)) {
+            if (classNameAttr && classes.match(regex)) {
               found = true;
+            }
+
+            if (classNameAttr && !classes.match(regex)) {
               context.report({
                 node,
                 messageId: "no-class-name",
