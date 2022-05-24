@@ -16,13 +16,16 @@ module.exports = {
           else return findDeclaration(node.parent);
         }
 
-        function evaluateClassName(value) {
-          if (value.type === "Literal") {
-            return value.value;
-          }
-          if (value.type === "JSXExpressionContainer") {
-            return value.expression.quasis.map(q => q.value.raw).join();
-          }
+        function evaluateClassName(className) {
+          if (className) {
+            if (className.value.type === "Literal") {
+              return className.value.value;
+            }
+            if (className.value.type === "JSXExpressionContainer") {
+              return className.value.expression.quasis.map(q => q.value.raw).join();
+            }
+	  }
+          return '';
         }
 
        return {
@@ -31,7 +34,7 @@ module.exports = {
             const dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
 
             const classNameAttr = node.attributes.find((attr) => attr.name.name === "className");
-            const classes = evaluateClassName(classNameAttr.value);
+            const classes = evaluateClassName(classNameAttr);
             const regex = new RegExp("(^|\\s)" + dashedName + "(\\s|$)");
 
             if (classNameAttr && !classes.match(regex)) {
@@ -40,6 +43,17 @@ module.exports = {
                 messageId: "no-class-name",
                 data: {
                   componentName
+                },
+                fix: (fixer) => {
+                  const sourceCode = context.getSourceCode();
+                  let fixedCode = sourceCode.getText(classNameAttr.value);
+                  if (classNameAttr.value.type === "Literal") {
+                     fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
+                  }
+                  if (classNameAttr.value.type === "JSXExpressionContainer") {
+                    fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
+                  }
+                  return fixer.replaceText(classNameAttr.value, fixedCode);
                 }
               });
             }
