@@ -12,6 +12,8 @@ module.exports = {
         "fixable": "code"
       },
       "create": (context) => {
+        let found = false;
+
         function findDeclaration (node) {
           if (node.type === "VariableDeclarator") return node;
           else return findDeclaration(node.parent);
@@ -33,8 +35,10 @@ module.exports = {
           JSXOpeningElement: (node) => {
             // only target root elements
             if (node.parent.parent.type !== 'ReturnStatement') return;
+            // we want to trigger this verification only once per file
+            if (found) return;
 
-            const componentName = findDeclaration(node).id.name.replace(/Component$/, '');
+            const componentName = findDeclaration(node).id.name;
             const dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
 
             const classNameAttr = node.attributes.find((attr) => attr.name.name === "className");
@@ -42,6 +46,7 @@ module.exports = {
             const regex = new RegExp("(^|\\s)" + dashedName + "(\\s|$)");
 
             if (classNameAttr && !classes.match(regex)) {
+              found = true;
               context.report({
                 node,
                 messageId: "no-class-name",
