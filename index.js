@@ -14,9 +14,9 @@ module.exports = {
       "create": (context) => {
         let found = false;
 
-        function findDeclaration (node) {
-          if (node.type === "VariableDeclarator") return node;
-          else return findDeclaration(node.parent);
+        function findRoot (node) {
+          if (node.parent) return findRoot(node.parent);
+          else return node;
         }
 
         function evaluateClassName(className) {
@@ -38,7 +38,15 @@ module.exports = {
             // we do not want to trigger this verification multiple times if the matching class was found
             if (found) return;
 
-            const componentName = findDeclaration(node).id.name;
+            const root = findRoot(node);
+            const namedExport = root.body.find(n => n.type === "ExportNamedDeclaration");
+            let componentName = '';
+            if (namedExport.declaration) {
+              componentName = namedExport.declaration.declarations[0].id.name;
+            }
+            if (namedExport.specifiers[0]) {
+              componentName = namedExport.specifiers[0].exported.name;
+            }
             const dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
 
             const classNameAttr = node.attributes.find((attr) => attr.name.name === "className");

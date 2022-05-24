@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-fabmanager",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "ESLint rules for Fab-manager",
   "main": "index.js",
   "scripts": {
