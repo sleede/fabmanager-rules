@@ -25,7 +25,7 @@ module.exports = {
                 return className.value.expression.quasis.map(q => q.value.raw).join();
               }
             }
-	        }
+          }
           return '';
         }
 
