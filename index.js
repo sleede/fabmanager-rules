@@ -40,6 +40,7 @@ module.exports = {
           },
           JSXOpeningElement: (node) => {
             if (node.parent.parent.type !== 'ReturnStatement') return;
+            if (!node.attributes.find((attr) => attr.name.name === 'className')) return;
             jsxNodes.push(node);
           },
           'Program:exit': (node) => {
@@ -64,20 +65,15 @@ module.exports = {
                   const fixNode = jsxNodes[jsxNodes.length-1];
                   const classNameAttr = fixNode.attributes.find((attr) => attr.name.name === 'className');
                   const sourceCode = context.getSourceCode();
-                  if (classNameAttr) {
-                    let fixedCode = sourceCode.getText(classNameAttr.value);
-                    if (classNameAttr.value.type === 'Literal') {
-                      fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
-                    }
-                    if (classNameAttr.value.type === 'JSXExpressionContainer') {
-                      fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
-                    }
-                    return fixer.replaceText(classNameAttr.value, fixedCode);
-                  } else {
-                    let fixedCode = sourceCode.getText(fixNode).replace('>', ` className="${dashedName}">`);
-                    console.log(fixedCode);
-                    return fixer.replaceText(fixNode, fixedCode);
+
+                  let fixedCode = sourceCode.getText(classNameAttr.value);
+                  if (classNameAttr.value.type === 'Literal') {
+                    fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
                   }
+                  if (classNameAttr.value.type === 'JSXExpressionContainer') {
+                    fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
+                  }
+                  return fixer.replaceText(classNameAttr.value, fixedCode);
                 }
               });
             }
