@@ -39,6 +39,7 @@ module.exports = {
             }
 
             if (componentName) {
+              componentName = componentName.replace(/$Abstract/, '');
               dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);
             }
           },
@@ -74,9 +75,12 @@ module.exports = {
                   let fixedCode = sourceCode.getText(classNameAttr.value);
                   if (classNameAttr.value.type === 'Literal') {
                     fixedCode = `"${dashedName} ${fixedCode.slice(1, -1)}"`;
-                  }
-                  if (classNameAttr.value.type === 'JSXExpressionContainer') {
-                    fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
+                  } else if (classNameAttr.value.type === 'JSXExpressionContainer') {
+                    if (classNameAttr.value.expression.type === 'TemplateLiteral') {
+                      fixedCode = fixedCode.replace('{`', `{\`${dashedName} `);
+                    } else if (classNameAttr.value.expression.type === 'Identifier') {
+                      fixedCode = fixedCode.replace(/^{(.+)}$/, `{\`${dashedName} $$\{$1}\`}`);
+                    }
                   }
                   return fixer.replaceText(classNameAttr.value, fixedCode);
                 }
