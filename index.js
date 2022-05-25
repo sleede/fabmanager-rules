@@ -32,14 +32,15 @@ module.exports = {
         return {
           ExportNamedDeclaration: (node) => {
             let componentName = null;
-            if (node.declaration) {
-              if (node.declaration.type === 'InterfaceDeclaration') return;
+            if (node.declaration && node.declaration.type === 'VariableDeclaration') {
               componentName = node.declaration.declarations[0].id.name;
-            }
-            if (node.specifiers[0]) {
+            } else if (node.specifiers[0]) {
               componentName = node.specifiers[0].exported.name;
             }
-            dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);;
+
+            if (componentName) {
+              dashedName = componentName[0].toLowerCase() + componentName.substring(1).replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);
+            }
           },
           JSXOpeningElement: (node) => {
             if (node.parent.parent.type !== 'ReturnStatement') return;
