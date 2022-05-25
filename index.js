@@ -21,7 +21,9 @@ module.exports = {
               return className.value.value;
             }
             if (className.value.type === 'JSXExpressionContainer') {
-              return className.value.expression.quasis.map(q => q.value.raw).join();
+              if (className.value.expression.type == 'TemplateLiteral') {
+                return className.value.expression.quasis.map(q => q.value.raw).join();
+              }
             }
 	        }
           return '';
