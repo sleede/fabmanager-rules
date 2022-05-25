@@ -33,6 +33,7 @@ module.exports = {
           ExportNamedDeclaration: (node) => {
             let componentName = null;
             if (node.declaration) {
+              if (node.declaration.type === 'InterfaceDeclaration') return;
               componentName = node.declaration.declarations[0].id.name;
             }
             if (node.specifiers[0]) {
