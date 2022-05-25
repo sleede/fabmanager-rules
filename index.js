@@ -59,15 +59,16 @@ module.exports = {
               }
             }
             if (!found) {
+              const errNode = jsxNodes[jsxNodes.length-1];
+              const classNameAttr = errNode.attributes.find((attr) => attr.name.name === 'className');
+
               context.report({
-                node: jsxNodes[jsxNodes.length-1],
+                node: classNameAttr,
                 messageId: 'no-class-name',
                 data: {
                   dashedName
                 },
                 fix: (fixer) => {
-                  const fixNode = jsxNodes[jsxNodes.length-1];
-                  const classNameAttr = fixNode.attributes.find((attr) => attr.name.name === 'className');
                   const sourceCode = context.getSourceCode();
 
                   let fixedCode = sourceCode.getText(classNameAttr.value);
