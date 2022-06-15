@@ -4,7 +4,7 @@
 
 Example of **incorrect** code for this rule:
 
-```jsx
+```tsx
 export const MyComponent: React.FC<MyComponentProps> = (props) => {
   return (
     <div className="the-wrong-class-name">
@@ -16,7 +16,7 @@ export const MyComponent: React.FC<MyComponentProps> = (props) => {
 
 Example of **correct** code for this rule:
 
-```jsx
+```tsx
 export const MyComponent: React.FC<MyComponentProps> = (props) => {
   return (
     <div className="my-component">

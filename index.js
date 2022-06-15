@@ -4,7 +4,8 @@ module.exports = {
     "component-named-like-file": require('./lib/rules/component-named-like-file'),
     "component-documentation": require('./lib/rules/component-documentation'),
     "no-bootstrap": require('./lib/rules/no-bootstrap'),
-    "no-utilities": require('./lib/rules/no-utilities')
+    "no-utilities": require('./lib/rules/no-utilities'),
+    "component-methods-documentation": require('./lib/rules/component-methods-documentation')
   }
 };
 

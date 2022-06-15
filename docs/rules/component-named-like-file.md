@@ -5,7 +5,7 @@
 Example of **incorrect** code for this rule:
 
 filename: my-component.tsx
-```jsx
+```tsx
 export const OtherComponentName: React.FC<MyComponentProps> = (props) => {
 }
 ```
@@ -13,7 +13,7 @@ export const OtherComponentName: React.FC<MyComponentProps> = (props) => {
 Example of **correct** code for this rule:
 
 filename: my-component.tsx
-```jsx
+```tsx
 export const MyComponent: React.FC<MyComponentProps> = (props) => {
 };
 ```
