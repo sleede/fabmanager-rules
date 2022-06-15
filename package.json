@@ -1,25 +1,39 @@
 {
   "name": "eslint-plugin-fabmanager",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "ESLint rules for Fab-manager",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sleede/fabmanager-rules.git"
   },
   "keywords": [
-    "fabmanager"
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin"
   ],
   "author": "Sleede",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sleede/fabmanager-rules/issues"
+  "main": "lib/index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha tests --recursive"
   },
-  "homepage": "https://github.com/sleede/fabmanager-rules#readme",
+  "dependencies": {
+    "requireindex": "^1.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.0.1",
+    "eslint-plugin-eslint-plugin": "^4.0.1",
+    "eslint-plugin-node": "^11.1.0",
+    "mocha": "^9.1.3",
+    "typescript": "^4.7.3"
+  },
+  "engines": {
+    "node": "12.x || 14.x || >= 16"
+  },
   "peerDependencies": {
-    "eslint": ">= 3"
-  }
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": ">=6"
+  },
+  "license": "ISC"
 }
