@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-fabmanager",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "ESLint rules for Fab-manager",
   "repository": {
     "type": "git",
