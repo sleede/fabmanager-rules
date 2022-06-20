@@ -18,6 +18,11 @@ const rule = require("../../../lib/rules/component-class-named-as-component"),
 
 const ruleTester = new RuleTester({
   parser: require.resolve('@typescript-eslint/parser'),
+  parserOptions: {
+    ecmaVersion: 2018,
+    ecmaFeatures: { "jsx": true },
+    sourceType: "module"
+  }
 });
 
 ruleTester.run("component-class-named-as-component", rule, {
@@ -29,12 +34,7 @@ ruleTester.run("component-class-named-as-component", rule, {
         "      {props.children}\n" +
         "    </div>\n" +
         "  );\n" +
-        "};",
-      parserOptions: {
-        ecmaVersion: 2018,
-        ecmaFeatures: { "jsx": true },
-        sourceType: "module"
-      }
+        "};"
     }
   ],
 
@@ -47,11 +47,6 @@ ruleTester.run("component-class-named-as-component", rule, {
         "    </div>\n" +
         "  );\n" +
         "};",
-      parserOptions: {
-        ecmaVersion: 2018,
-        ecmaFeatures: { "jsx": true },
-        sourceType: "module"
-      },
       errors: [{
         message: "Component className should have a class named like the component, with dashes, on its top level tag.",
         type: "JSXAttribute"
