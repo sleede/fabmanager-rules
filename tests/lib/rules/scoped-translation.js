@@ -64,7 +64,7 @@ ruleTester.run("scoped-translation", rule, {
       }],
       output: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
         "    const { t } = useTranslation('shared');\n" +
-        "    return (<span>{t('app.shared.wrong_scope.my_component.message')}</span>);\n" +
+        "    return (<span>{t('app.shared.my_component.message')}</span>);\n" +
         "};"
     },
     {
@@ -78,7 +78,21 @@ ruleTester.run("scoped-translation", rule, {
       }],
       output: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
         "    const { t } = useTranslation('shared');\n" +
-        "    return (<span>{t(`app.shared.deeply.scoped.but.wrong_component.${props.foo}.my_component.message_VAR`, { VAR: props.bar })}</span>);\n" +
+        "    return (<span>{t(`app.shared.deeply.scoped.but.my_component.${props.foo}.message_VAR`, { VAR: props.bar })}</span>);\n" +
+        "};",
+    },
+    {
+      code: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "    const { t } = useTranslation('shared');\n" +
+        "    return (<span>{t('app.shared.my_component')}</span>);\n" +
+        "};",
+      errors: [{
+        message: "Component translations must be scoped in a node named like the component.",
+        type: "CallExpression"
+      }],
+      output: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "    const { t } = useTranslation('shared');\n" +
+        "    return (<span>{t('app.shared.my_component.my_component')}</span>);\n" +
         "};",
     },
   ],
