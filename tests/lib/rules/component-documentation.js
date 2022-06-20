@@ -1,6 +1,6 @@
 /**
  * @fileoverview Tests for component-documentation
- * @author Sleede
+ * @author Sylvain@sleede.com
  */
 "use strict";
 
