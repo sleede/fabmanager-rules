@@ -35,6 +35,15 @@ ruleTester.run("component-class-named-as-component", rule, {
         "    </div>\n" +
         "  );\n" +
         "};"
+    },
+    {
+      code: "export const MyGenericComponent = <TAlpha extends Alpha>(props: MyGenericComponentProps<TAlpha>) => {\n" +
+        " return (\n" +
+        "    <div className=\"my-generic-component\">\n" +
+        "      {props.children}\n" +
+        "    </div>\n" +
+        "  );\n" +
+        "};"
     }
   ],
 
