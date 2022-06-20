@@ -32,7 +32,8 @@ ruleTester.run("component-documentation", rule, {
         "export const MyComponent: React.FC<MyComponentProps> = (props) => { return (<div/>); };"
     },
     {
-      code: "/**\n * This component is a box\n */\n" +
+      code: "import React, { ReactNode, useState } from 'react';" +
+        "/**\n * This component is a box\n */\n" +
         "const Box: React.FC<BoxProps> = (props) => { return (<div/>); };\n" +
         "const BoxWrapper: React.FC<BoxProps> = (props) => { return (<Loader><Box {...props}/></Loader>); };\n" +
         "export { BoxWrapper as Box };"
