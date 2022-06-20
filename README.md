@@ -39,4 +39,8 @@ Then configure the rules you want to use under the rules section.
 }
 ```
 
+## Development
 
+Use [Yeoman](https://github.com/eslint/generator-eslint) to generate a new rule.
+
+Code with test-driven development.
