@@ -1,6 +1,6 @@
 /**
- * @fileoverview lorem ipsum
- * @author Sleede
+ * @fileoverview Tests for component-class-named-as-component
+ * @author Sylvain@sleede.com
  */
 "use strict";
 
