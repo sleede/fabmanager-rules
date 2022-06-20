@@ -59,9 +59,13 @@ ruleTester.run("scoped-translation", rule, {
         "    return (<span>{t('app.shared.wrong_scope.message')}</span>);\n" +
         "};",
       errors: [{
-        message: "You should scope your translations in a parent named like the component.",
+        message: "Component translations must be scoped in a node named like the component.",
         type: "CallExpression"
       }],
+      output: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "    const { t } = useTranslation('shared');\n" +
+        "    return (<span>{t('app.shared.wrong_scope.my_component.message')}</span>);\n" +
+        "};"
     },
     {
       code: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
@@ -69,9 +73,13 @@ ruleTester.run("scoped-translation", rule, {
         "    return (<span>{t(`app.shared.deeply.scoped.but.wrong_component.${props.foo}.message_VAR`, { VAR: props.bar })}</span>);\n" +
         "};",
       errors: [{
-        message: "You should scope your translations in a parent named like the component.",
+        message: "Component translations must be scoped in a node named like the component.",
         type: "CallExpression"
       }],
+      output: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "    const { t } = useTranslation('shared');\n" +
+        "    return (<span>{t(`app.shared.deeply.scoped.but.wrong_component.${props.foo}.my_component.message_VAR`, { VAR: props.bar })}</span>);\n" +
+        "};",
     },
   ],
 });
