@@ -50,6 +50,16 @@ ruleTester.run("scoped-translation", rule, {
         "  return (<span>{t(`app.shared.deeply.scoped.my_component.${props.foo}.message_VAR`, { VAR: props.bar })}</span>);\n" +
         "};"
     },
+    {
+      code: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "  return (<HtmlTranslate trKey='app.shared.my_component.text_html' />);\n" +
+        "};"
+    },
+    {
+      code: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "  return (<HtmlTranslate trKey={`app.shared.my_component.${props.foo}.text_html`} />);\n" +
+        "};"
+    },
   ],
 
   invalid: [
@@ -94,6 +104,30 @@ ruleTester.run("scoped-translation", rule, {
         "    const { t } = useTranslation('shared');\n" +
         "    return (<span>{t('app.shared.my_component.my_component')}</span>);\n" +
         "};",
+    },
+    {
+      code: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "  return (<HtmlTranslate trKey='app.shared.wrong_name.text_html' />);\n" +
+        "};",
+      errors: [{
+        message: "Component translations must be scoped in a node named like the component.",
+        type: "JSXAttribute"
+      }],
+      output: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "  return (<HtmlTranslate trKey='app.shared.my_component.text_html' />);\n" +
+        "};",
+    },
+    {
+      code: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "  return (<HtmlTranslate trKey={`app.shared.wrong_name.${props.foo}.text_html`} />);\n" +
+        "};",
+      errors: [{
+        message: "Component translations must be scoped in a node named like the component.",
+        type: "JSXAttribute"
+      }],
+      output: "export const MyComponent: React.FC<MyComponentProps> = (props) => {\n" +
+        "  return (<HtmlTranslate trKey={`app.shared.my_component.${props.foo}.text_html`} />);\n" +
+        "};"
     },
   ],
 });
